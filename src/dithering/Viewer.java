@@ -19,6 +19,7 @@ import java.awt.image.BufferedImage;
 public class Viewer extends JFrame {
     private ImageComponent imageComponent;
     private BufferedImage image;
+    private Transformer transformer;
 
     private final String imageFileName = "4.2.03.tiff";
 
@@ -32,8 +33,9 @@ public class Viewer extends JFrame {
         setTitle(String.format("Dithering Final Project"));
 
         loadImage();
+        transformer = new Transformer(image);
 
-        imageComponent = new ImageComponent(getImageArray());
+        imageComponent = new ImageComponent(transformer.getCompressed());
         add(imageComponent, BorderLayout.CENTER);
 
         pack();
@@ -45,20 +47,6 @@ public class Viewer extends JFrame {
         } catch (IOException e) {
             System.out.println("Error loading image.");
         }
-    }
-
-    private int[][] getImageArray() {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        int[][] array = new int[height][width];
-
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                array[row][col] = image.getRGB(row, col);
-            }
-        }
-
-        return array;
     }
 
     private int[][] getRandomArray() {
