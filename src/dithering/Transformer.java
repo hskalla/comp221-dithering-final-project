@@ -49,6 +49,56 @@ public class Transformer {
         return array;
     }
 
+    public int[][] getLinearDither() {
+        int[][] array = new int[height][width];
+
+        //error variables
+        int rError = 0;
+        int gError = 0;
+        int bError = 0;
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                int rgb = image.getRGB(row, col);
+                int red = (rgb >> 16) & 0xFF;
+                int green = (rgb >> 8) & 0xFF;
+                int blue = rgb & 0xFF;
+                //rgb values are between 0-255.
+
+                red+=rError;
+                green+=gError;
+                blue+=bError;
+
+                if(red<113) {
+                    rError = red;
+                    red=0;
+                } else {
+                    rError = red - 255;
+                    red=225;
+                }
+
+                if(green<113) {
+                    gError = green;
+                    green=0;
+                } else {
+                    gError = green - 255;
+                    green=225;
+                }
+
+                if(blue<113) {
+                    bError = blue;
+                    blue = 0;
+                } else {
+                    bError = blue - 255;
+                    blue = 255;
+                }
+
+                array[row][col] = (red << 16) | (green << 8) | blue;
+            }
+        }
+
+        return array;
+    }
+
     private int roundColor(int color) {
         if(color<113) {
             return 0;

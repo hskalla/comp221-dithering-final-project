@@ -21,7 +21,7 @@ public class Viewer extends JFrame {
     private BufferedImage image;
     private Transformer transformer;
 
-    private final String imageFileName = "4.2.03.tiff";
+    private final String imageFileName = "boat.512.tiff";
 
     /**
      * Construct a new main window.
@@ -35,7 +35,7 @@ public class Viewer extends JFrame {
         loadImage();
         transformer = new Transformer(image);
 
-        imageComponent = new ImageComponent(transformer.getCompressed());
+        imageComponent = new ImageComponent(transformer.getLinearDither());
         add(imageComponent, BorderLayout.CENTER);
 
         pack();
