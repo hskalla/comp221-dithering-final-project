@@ -7,15 +7,20 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 
 /**
  * TODO: add javadoc
  */
 public class Viewer extends JFrame {
-
     private ImageComponent imageComponent;
+    private BufferedImage image;
+
+    private final String imageFileName = "4.2.03.tiff";
 
     /**
      * Construct a new main window.
@@ -26,17 +31,41 @@ public class Viewer extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle(String.format("Dithering Final Project"));
 
-        imageComponent = new ImageComponent(randomImg());
+        loadImage();
+
+        imageComponent = new ImageComponent(getImageArray());
         add(imageComponent, BorderLayout.CENTER);
 
         pack();
     }
 
-    private char[][] randomImg() {
-        char[][] img = new char[256][256];
+    private void loadImage() {
+        try {
+            image = ImageIO.read(new File("images/"+imageFileName));
+        } catch (IOException e) {
+            System.out.println("Error loading image.");
+        }
+    }
+
+    private int[][] getImageArray() {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        int[][] array = new int[height][width];
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                array[row][col] = image.getRGB(row, col);
+            }
+        }
+
+        return array;
+    }
+
+    private int[][] getRandomArray() {
+        int[][] img = new int[256][256];
         for(int x=0;x<img.length;x++) {
             for(int y=0;y<img[0].length;y++) {
-                img[x][y] = (char)(Math.random() * Character.MAX_VALUE);
+                img[x][y] = (int)(Math.random() * Integer.MAX_VALUE);
             }
         }
         return img;
