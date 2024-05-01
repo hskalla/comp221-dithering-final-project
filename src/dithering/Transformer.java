@@ -19,7 +19,7 @@ public class Transformer {
 
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
-                array[row][col] = image.getRGB(row, col);
+                array[row][col] = image.getRGB(col, row);
             }
         }
 
@@ -27,12 +27,12 @@ public class Transformer {
     }
 
     //help manipulating rgb values from: https://www.baeldung.com/java-rgb-color-representation#:~:text=In%20programming%20languages%2C%20including%20Java,into%20a%2032%2Dbit%20integer.
-    public int[][] getCompressed() {
+    public int[][] getThreshhold() {
         int[][] array = new int[height][width];
 
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
-                int rgb = image.getRGB(row, col);
+                int rgb = image.getRGB(col, row);
                 int red = (rgb >> 16) & 0xFF; 
                 int green = (rgb >> 8) & 0xFF;
                 int blue = rgb & 0xFF;
@@ -58,7 +58,7 @@ public class Transformer {
         int bError = 0;
         for (int row = 1; row < height; row++) {
             for (int col = 1; col < width; col++) {
-                int rgb = image.getRGB(row, col);
+                int rgb = image.getRGB(col, row);
                 int red = (rgb >> 16) & 0xFF;
                 int green = (rgb >> 8) & 0xFF;
                 int blue = rgb & 0xFF;
@@ -104,7 +104,7 @@ public class Transformer {
 
         for (int row = 1; row < height; row++) {
             for (int col = 1; col < width; col++) {
-                int rgb = image.getRGB(row, col);
+                int rgb = image.getRGB(col, row);
                 int red = (rgb >> 16) & 0xFF;
                 int green = (rgb >> 8) & 0xFF;
                 int blue = rgb & 0xFF;

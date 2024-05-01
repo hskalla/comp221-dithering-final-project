@@ -19,7 +19,7 @@ public class ImageComponent extends JComponent {
             for(int y=0;y<img[0].length;y++) {
                 Color color = new Color(img[x][y]);
                 g2.setPaint(color);
-                g2.fillRect((x*PIXEL_SIZE), (y*PIXEL_SIZE), PIXEL_SIZE, PIXEL_SIZE);
+                g2.fillRect((y*PIXEL_SIZE), (x*PIXEL_SIZE), PIXEL_SIZE, PIXEL_SIZE);
             }
         }
     }
