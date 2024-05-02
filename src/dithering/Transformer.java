@@ -217,11 +217,103 @@ public class Transformer {
         return array;
     }
 
+    public int[][] getContextCurveDither() {
+        int[][] array = new int[height][width];
+
+        //only works for even dimension pictures
+        if(height%2!=0 || width%2!=0) {
+            return null;
+        }
+
+        //create array of rgb values from image
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                array[row][col] = image.getRGB(col, row);
+            }
+        }
+
+        /////////// Context-based SFC algorithm ////////////////
+
+        // 1. constructing cycle graph
+
+        GridGraph grid = new GridGraph(height/2,width/2);
+        for(int y=0;y<height/2;y++) {
+            for(int x=0;x<width/2;x++) {
+                //find cost of down edge if there exists a down edge.
+                if(y!=height/2-1) {
+                    int a = array[2*y+1][2*x];
+                    int b = array[2*y+1][2*x+1];
+                    int c = array[2*y+2][2*x];
+                    int d = array[2*y+2][2*x+1];
+
+                    double same = compareColors(a, b) + compareColors(c, d);
+                    double diff = compareColors(a, c) + compareColors(b, d);
+
+                    grid.setDownEdge(x, y, diff-same);
+
+                    //debugging
+                }
+
+                //find cost of right edge if there exists a down edge.
+                if(x!=width/2-1) {
+                    int a = array[2*y][2*x+1];
+                    int b = array[2*y][2*x+2];
+                    int c = array[2*y+1][2*x+1];
+                    int d = array[2*y+1][2*x+2];
+
+                    double same = compareColors(a, c) + compareColors(b, d);
+                    double diff = compareColors(a, b) + compareColors(c, d);
+
+                    grid.setRightEdge(x, y, diff-same);
+                }
+
+                //System.out.println("\tx:"+x+" y:"+y+" down:"+grid.getDownEdge(x,y)+" right:"+grid.getRightEdge(x,y));
+            }
+        }
+
+        // 2. Use prim's agorithm to get a minimum spanning tree.
+
+        System.out.println("started prims");
+        GridGraph mst = grid.prims();
+        System.out.println("completed prims");
+
+        return array;
+    }
+
     private int roundColor(int color) {
         if(color<113) {
             return 0;
         } else {
             return 225;
         }
+    }
+
+    private int getRed(int rgb) {
+        return (rgb >> 16) & 0xFF;
+    }
+
+    private int getGreen(int rgb) {
+        return (rgb >> 8) & 0xFF;
+    }
+
+    private int getBlue(int rgb) {
+        return rgb & 0xFF;
+    }
+
+    private double compareColors(int c1, int c2) {
+        int red1 = (c1 >> 16) & 0xFF;
+        int green1 = (c1 >> 8) & 0xFF;
+        int blue1 = c1 & 0xFF;
+
+        int red2 = (c2 >> 16) & 0xFF;
+        int green2 = (c2 >> 8) & 0xFF;
+        int blue2 = c2 & 0xFF;
+
+        double difference = Math.sqrt(
+            Math.pow(red1-red2,2)+
+            Math.pow(green1-green2,2)+
+            Math.pow(blue1-blue2,2));
+
+        return difference;
     }
 }

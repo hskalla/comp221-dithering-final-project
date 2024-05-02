@@ -21,7 +21,7 @@ public class Viewer extends JFrame {
     private BufferedImage image;
     private Transformer transformer;
 
-    private final String imageFileName = "gradient.png";
+    private final String imageFileName = "tree.png";
 
     /**
      * Construct a new main window.
@@ -35,7 +35,7 @@ public class Viewer extends JFrame {
         loadImage();
         transformer = new Transformer(image);
 
-        imageComponent = new ImageComponent(transformer.getThreshhold());
+        imageComponent = new ImageComponent(transformer.getContextCurveDither());
         add(imageComponent, BorderLayout.CENTER);
         pack();
     }
