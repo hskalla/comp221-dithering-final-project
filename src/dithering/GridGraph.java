@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
+import dithering.EdgeMinHeap.Edge;
 
 public class GridGraph {
     private Node[][] grid;
@@ -25,57 +26,35 @@ public class GridGraph {
         GridGraph mst = new GridGraph(height, width);
         double cost = 0;
 
+        EdgeMinHeap heap = new EdgeMinHeap(height*width*100);
         ArrayList<Point> visited = new ArrayList<Point>();
-        Set<Point> vertices = new HashSet<Point>();
-
-        for(int y=0;y<height;y++) {
-            for(int x=0;x<width;x++) {
-                vertices.add(new Point(x,y));
-            }
-        }
 
         visited.add(new Point(0,0));
-        vertices.remove(new Point(0,0));
+
+        Set<Point> nei = getNeighbors(0,0);
+        for(Point n : nei) {
+            heap.enqueue(new Point(0,0), n, getEdge(new Point(0,0), n));
+        }
 
         //boolean yes = vertices.remove(new Point(0,0));
         //System.out.println("get vertex worked?: "+yes);
 
-        //actual prims: modified from Henry's hw3.
-        while(!vertices.isEmpty()) {
-            Point outside = null;
-            Point inside = null;
-            Double minWeight = null;
-            for(Point v : vertices) {
-
-                Set<Point> neighbors = getNeighbors(v.x, v.y);
-
-                for(Point w : neighbors) {
-                    Double edge = getEdge(v, w);
-                    boolean contains = false;
-                    for(Point p : visited) {
-                        if(p.equals(w)) {
-                            contains = true;
-                            break;
-                        }
-                    }
-                    //System.out.print("("+w.x+","+w.y+") "+contains+" ");
-                    if(contains && edge!=null) {
-                        if(minWeight==null || edge<minWeight) {
-                            outside = v;
-                            inside = w;
-                            minWeight = edge;
-                        }
+        //minheap prims: modified from Henry's hw3.
+        while(!heap.isEmpty()) {            
+            Edge edge = heap.dequeue();
+            //System.out.print("("+w.x+","+w.y+") "+contains+" ");
+            if(!visited.contains(edge.e) && edge!=null) {
+                //System.out.println("added point: ("+edge.e.x+","+edge.e.y+")");
+                mst.setEdge(edge.e, edge.s, 1);
+                cost+=edge.w;
+                visited.add(edge.e);
+                Set<Point> neighbors = getNeighbors(edge.e.x, edge.e.y);
+                for(Point neighbor : neighbors) {
+                    if(!neighbor.equals(edge.s)) {
+                        heap.enqueue(edge.e, neighbor, getEdge(edge.e,neighbor));
                     }
                 }
             }
-            if(minWeight==null) {
-                return null;
-            }
-            System.out.println("added point: ("+outside.x+","+outside.y+")");
-            mst.setEdge(outside, inside, 1);
-            cost+=minWeight;
-            visited.add(outside);
-            vertices.remove(outside);
         }
         System.out.println("cost of prims: "+cost);
         return mst;
@@ -84,16 +63,16 @@ public class GridGraph {
     public GridGraph sfcFromTree() {
         GridGraph sfc = new GridGraph(height*2, width*2);
         for(int y=0;y<sfc.height-1;y+=2) {
-            sfc.setDownEdge(0,y,1);
+            sfc.setDownEdge(y,0,1);
         }
         for(int x=0;x<sfc.width-1;x+=2) {
-            sfc.setRightEdge(x,0,1);
+            sfc.setRightEdge(0,x,1);
         }
 
         for(int y=0;y<height;y++) {
             for(int x=0;x<width;x++) {
-                boolean down = (getDownEdge(x,y)==1);
-                boolean right = (getRightEdge(x,y)==1);
+                boolean down = (getDownEdge(y,x)==1);
+                boolean right = (getRightEdge(y,x)==1);
 
                 boolean downBound = (y==height-1);
                 boolean rightBound = (x==width-1);

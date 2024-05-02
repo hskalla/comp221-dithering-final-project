@@ -9,6 +9,7 @@ public class EdgeMinHeap {
     public EdgeMinHeap(int n) {
         size = 0;
         heap = new Edge[n];
+        System.out.println("heap size: "+heap.length);
     }
 
     public EdgeMinHeap() {
