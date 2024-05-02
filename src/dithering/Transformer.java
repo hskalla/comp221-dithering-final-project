@@ -277,6 +277,10 @@ public class Transformer {
         GridGraph mst = grid.prims();
         System.out.println("completed prims");
 
+        System.out.println("started sfc");
+        GridGraph sfc = mst.sfcFromTree();
+        System.out.println("completed sfc");
+
         return array;
     }
 

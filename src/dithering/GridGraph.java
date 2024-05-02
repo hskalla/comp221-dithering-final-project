@@ -81,6 +81,52 @@ public class GridGraph {
         return mst;
     }
 
+    public GridGraph sfcFromTree() {
+        GridGraph sfc = new GridGraph(height*2, width*2);
+        for(int y=0;y<height;y++) {
+            for(int x=0;x<width;x++) {
+                boolean down = (getDownEdge(x,y)==1);
+                boolean right = (getRightEdge(x,y)==1);
+
+                boolean downBound = (y==height-1);
+                boolean rightBound = (x==width-1);
+
+                System.out.print("("+x+","+y+") is open ");
+
+                if(down && right) {
+                    System.out.println("down and right");
+                    sfc.setRightEdge(2*x+1, 2*y, 1);
+                    sfc.setRightEdge(2*x+1, 2*y+1, 1);
+
+                    sfc.setDownEdge(2*x,2*y+1,1);
+                    sfc.setDownEdge(2*x+1,2*y+1,1);
+                } else if(right) {
+                    System.out.println("right");
+                    sfc.setRightEdge(2*x+1, 2*y, 1);
+                    sfc.setRightEdge(2*x+1, 2*y+1, 1);
+
+                    sfc.setRightEdge(2*x,2*y+1,1);
+                    if(!downBound) sfc.setRightEdge(2*x,2*y+2,1);
+                } else if(down) {
+                    System.out.println("down");
+                    sfc.setDownEdge(2*x+1, 2*y, 1);
+                    if(!rightBound) sfc.setDownEdge(2*x+2, 2*y, 1);
+
+                    sfc.setDownEdge(2*x,2*y+1,1);
+                    sfc.setDownEdge(2*x+1,2*y+1,1);
+                } else { //if neither right or down
+                    System.out.println("on neither");
+                    sfc.setDownEdge(2*x+1, 2*y, 1);
+                    if(!rightBound) sfc.setDownEdge(2*x+2, 2*y, 1);
+
+                    sfc.setRightEdge(2*x,2*y+1,1);
+                    if(!downBound) sfc.setRightEdge(2*x,2*y+2,1);
+                }
+            }
+        }
+        return sfc;
+    }
+
     public void setRightEdge(int x, int y, double w) {
         grid[x][y].rightEdge = w;
     }
