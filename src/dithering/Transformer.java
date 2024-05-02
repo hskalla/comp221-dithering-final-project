@@ -1,6 +1,7 @@
 package dithering;
 
 import java.awt.image.BufferedImage;
+import java.awt.Point;
 
 public class Transformer {
     BufferedImage image;
@@ -277,9 +278,17 @@ public class Transformer {
         GridGraph mst = grid.prims();
         System.out.println("completed prims");
 
+        // 3. Create sfc from minimum spanning tree.
+
         System.out.println("started sfc");
         GridGraph sfc = mst.sfcFromTree();
         System.out.println("completed sfc");
+
+        System.out.println("started traversal");
+        Point[] path = sfc.traverseSfc();
+        System.out.println("completed traversal");
+
+
 
         return array;
     }

@@ -83,6 +83,13 @@ public class GridGraph {
 
     public GridGraph sfcFromTree() {
         GridGraph sfc = new GridGraph(height*2, width*2);
+        for(int y=0;y<sfc.height-1;y+=2) {
+            sfc.setDownEdge(0,y,1);
+        }
+        for(int x=0;x<sfc.width-1;x+=2) {
+            sfc.setRightEdge(x,0,1);
+        }
+
         for(int y=0;y<height;y++) {
             for(int x=0;x<width;x++) {
                 boolean down = (getDownEdge(x,y)==1);
@@ -125,6 +132,29 @@ public class GridGraph {
             }
         }
         return sfc;
+    }
+
+    public Point[] traverseSfc() {
+        int length = height*width;
+        Point[] path = new Point[length];
+        
+        Point currentPoint = new Point(0,0);
+        path[0] = currentPoint;
+        System.out.println("visited (0,0)");
+
+        for(int i=1;i<length;i++) {
+            Set<Point> neighbors = getNeighbors(currentPoint.x, currentPoint.y);
+            for(Point neighbor : neighbors) {
+                if(getEdge(currentPoint, neighbor)==1) {
+                    setEdge(neighbor, currentPoint, 0);
+                    currentPoint = neighbor;
+                    path[i] = currentPoint;
+                    System.out.println("visited ("+currentPoint.x+","+currentPoint.y+")");
+                    break;
+                }
+            }
+        }
+        return path;
     }
 
     public void setRightEdge(int x, int y, double w) {
