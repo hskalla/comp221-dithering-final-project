@@ -5,7 +5,7 @@ import java.awt.event.*;
 import javax.swing.JComponent;
 
 public class ImageComponent extends JComponent {
-    private static final int PIXEL_SIZE = 40;
+    private static final int PIXEL_SIZE = 1;
     int[][] img;
 
     public ImageComponent(int[][] img) {

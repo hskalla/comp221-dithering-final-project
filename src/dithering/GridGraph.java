@@ -98,31 +98,31 @@ public class GridGraph {
                 boolean downBound = (y==height-1);
                 boolean rightBound = (x==width-1);
 
-                System.out.print("("+x+","+y+") is open ");
+                //System.out.print("("+x+","+y+") is open ");
 
                 if(down && right) {
-                    System.out.println("down and right");
+                    //System.out.println("down and right");
                     sfc.setRightEdge(2*x+1, 2*y, 1);
                     sfc.setRightEdge(2*x+1, 2*y+1, 1);
 
                     sfc.setDownEdge(2*x,2*y+1,1);
                     sfc.setDownEdge(2*x+1,2*y+1,1);
                 } else if(right) {
-                    System.out.println("right");
+                    //System.out.println("right");
                     sfc.setRightEdge(2*x+1, 2*y, 1);
                     sfc.setRightEdge(2*x+1, 2*y+1, 1);
 
                     sfc.setRightEdge(2*x,2*y+1,1);
                     if(!downBound) sfc.setRightEdge(2*x,2*y+2,1);
                 } else if(down) {
-                    System.out.println("down");
+                    //System.out.println("down");
                     sfc.setDownEdge(2*x+1, 2*y, 1);
                     if(!rightBound) sfc.setDownEdge(2*x+2, 2*y, 1);
 
                     sfc.setDownEdge(2*x,2*y+1,1);
                     sfc.setDownEdge(2*x+1,2*y+1,1);
                 } else { //if neither right or down
-                    System.out.println("on neither");
+                    //System.out.println("on neither");
                     sfc.setDownEdge(2*x+1, 2*y, 1);
                     if(!rightBound) sfc.setDownEdge(2*x+2, 2*y, 1);
 
@@ -140,7 +140,7 @@ public class GridGraph {
         
         Point currentPoint = new Point(0,0);
         path[0] = currentPoint;
-        System.out.println("visited (0,0)");
+        //System.out.println("visited (0,0)");
 
         for(int i=1;i<length;i++) {
             Set<Point> neighbors = getNeighbors(currentPoint.x, currentPoint.y);
@@ -149,7 +149,7 @@ public class GridGraph {
                     setEdge(neighbor, currentPoint, 0);
                     currentPoint = neighbor;
                     path[i] = currentPoint;
-                    System.out.println("visited ("+currentPoint.x+","+currentPoint.y+")");
+                    //System.out.println("visited ("+currentPoint.x+","+currentPoint.y+")");
                     break;
                 }
             }
@@ -186,13 +186,13 @@ public class GridGraph {
         vector.translate(-p1.x,-p1.y);
         Double edge;
         if(vector.x==-1) {
-            edge = getRightEdge(p1.x-1,p1.y);
+            edge = getRightEdge(p1.y,p1.x-1);
         } else if(vector.x==1) {
-            edge = getRightEdge(p1.x,p1.y);
+            edge = getRightEdge(p1.y,p1.x);
         } else if(vector.y==-1) {
-            edge = getDownEdge(p1.x,p1.y-1);
+            edge = getDownEdge(p1.y-1,p1.x);
         } else {
-            edge = getDownEdge(p1.x,p1.y);
+            edge = getDownEdge(p1.y,p1.x);
         }
         return edge;
     }
@@ -201,13 +201,13 @@ public class GridGraph {
         Point vector = new Point(p2.x,p2.y);
         vector.translate(-p1.x,-p1.y);
         if(vector.x==-1) {
-            setRightEdge(p1.x-1,p1.y,w);
+            setRightEdge(p1.y,p1.x-1,w);
         } else if(vector.x==1) {
-            setRightEdge(p1.x,p1.y,w);
+            setRightEdge(p1.y,p1.x,w);
         } else if(vector.y==-1) {
-            setDownEdge(p1.x,p1.y-1,w);
+            setDownEdge(p1.y-1,p1.x,w);
         } else {
-            setDownEdge(p1.x,p1.y,w);
+            setDownEdge(p1.y,p1.x,w);
         }
     }
 

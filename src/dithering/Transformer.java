@@ -12,6 +12,8 @@ public class Transformer {
         this.image = image;
         width = image.getWidth();
         height = image.getHeight();
+        System.out.println("height="+height);
+        System.out.println("width="+width);
     }
 
     //credit to: https://www.baeldung.com/java-getting-pixel-array-from-image
@@ -237,8 +239,9 @@ public class Transformer {
 
         // 1. constructing cycle graph
 
-        GridGraph grid = new GridGraph(height/2,width/2);
-        for(int y=0;y<height/2;y++) {
+        GridGraph grid = new GridGraph(width/2,height/2);
+
+        for(int y=0;y<height/2;y++) { 
             for(int x=0;x<width/2;x++) {
                 //find cost of down edge if there exists a down edge.
                 if(y!=height/2-1) {
@@ -288,7 +291,50 @@ public class Transformer {
         Point[] path = sfc.traverseSfc();
         System.out.println("completed traversal");
 
+        // 4. Linear dither!!!!
 
+        int rError = 0;
+        int gError = 0;
+        int bError = 0;
+        for(int i=0;i<path.length;i++) {
+            Point p = path[i];
+
+            int rgb = image.getRGB(p.x, p.y);
+                int red = (rgb >> 16) & 0xFF;
+                int green = (rgb >> 8) & 0xFF;
+                int blue = rgb & 0xFF;
+                //rgb values are between 0-255.
+
+                red+=rError;
+                green+=gError;
+                blue+=bError;
+
+                if(red<113) {
+                    rError = red;
+                    red=0;
+                } else {
+                    rError = red - 255;
+                    red=225;
+                }
+
+                if(green<113) {
+                    gError = green;
+                    green=0;
+                } else {
+                    gError = green - 255;
+                    green=225;
+                }
+
+                if(blue<113) {
+                    bError = blue;
+                    blue = 0;
+                } else {
+                    bError = blue - 255;
+                    blue = 255;
+                }
+
+                array[p.y][p.x] = (red << 16) | (green << 8) | blue;
+        }
 
         return array;
     }

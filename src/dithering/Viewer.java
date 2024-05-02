@@ -21,7 +21,7 @@ public class Viewer extends JFrame {
     private BufferedImage image;
     private Transformer transformer;
 
-    private final String imageFileName = "tree.png";
+    private final String imageFileName = "gradient.png";
 
     /**
      * Construct a new main window.
