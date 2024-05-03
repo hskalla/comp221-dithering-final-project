@@ -21,6 +21,11 @@ public class EdgeMinHeap {
         size++;
 
         heapifyParents(size-1);
+        //System.out.print("Heap: ");
+        for(int i=0;i<size;i++) {
+            //System.out.print(heap[i].w+", ");
+        }
+        //System.out.println();
     }
 
     public Edge dequeue() {
