@@ -29,7 +29,7 @@ public class GridGraph {
         EdgeMinHeap heap = new EdgeMinHeap(height*width*100);
         ArrayList<Point> visited = new ArrayList<Point>();
 
-        visited.add(new Point(0,0));
+        //visited.add(new Point(0,0));
 
         Set<Point> nei = getNeighbors(0,0);
         for(Point n : nei) {
@@ -81,32 +81,32 @@ public class GridGraph {
 
                 if(down && right) {
                     //System.out.println("down and right");
-                    sfc.setRightEdge(2*x+1, 2*y, 1);
-                    sfc.setRightEdge(2*x+1, 2*y+1, 1);
+                    sfc.setRightEdge(2*y,2*x+1, 1);
+                    sfc.setRightEdge(2*y+1,2*x+1, 1);
 
-                    sfc.setDownEdge(2*x,2*y+1,1);
-                    sfc.setDownEdge(2*x+1,2*y+1,1);
+                    sfc.setDownEdge(2*y+1,2*x,1);
+                    sfc.setDownEdge(2*y+1,2*x+1,1);
                 } else if(right) {
                     //System.out.println("right");
-                    sfc.setRightEdge(2*x+1, 2*y, 1);
-                    sfc.setRightEdge(2*x+1, 2*y+1, 1);
+                    sfc.setRightEdge(2*y,2*x+1, 1);
+                    sfc.setRightEdge(2*y+1,2*x+1, 1);
 
-                    sfc.setRightEdge(2*x,2*y+1,1);
-                    if(!downBound) sfc.setRightEdge(2*x,2*y+2,1);
+                    sfc.setRightEdge(2*y+1,2*x,1);
+                    if(!downBound) sfc.setRightEdge(2*y+2,2*x,1);
                 } else if(down) {
                     //System.out.println("down");
-                    sfc.setDownEdge(2*x+1, 2*y, 1);
-                    if(!rightBound) sfc.setDownEdge(2*x+2, 2*y, 1);
+                    sfc.setDownEdge(2*y,2*x+1, 1);
+                    if(!rightBound) sfc.setDownEdge(2*y,2*x+2, 1);
 
-                    sfc.setDownEdge(2*x,2*y+1,1);
-                    sfc.setDownEdge(2*x+1,2*y+1,1);
+                    sfc.setDownEdge(2*y+1,2*x,1);
+                    sfc.setDownEdge(2*y+1,2*x+1,1);
                 } else { //if neither right or down
                     //System.out.println("on neither");
-                    sfc.setDownEdge(2*x+1, 2*y, 1);
-                    if(!rightBound) sfc.setDownEdge(2*x+2, 2*y, 1);
+                    sfc.setDownEdge(2*y,2*x+1, 1);
+                    if(!rightBound) sfc.setDownEdge(2*y,2*x+2, 1);
 
-                    sfc.setRightEdge(2*x,2*y+1,1);
-                    if(!downBound) sfc.setRightEdge(2*x,2*y+2,1);
+                    sfc.setRightEdge(2*y+1,2*x,1);
+                    if(!downBound) sfc.setRightEdge(2*y+2,2*x,1);
                 }
             }
         }

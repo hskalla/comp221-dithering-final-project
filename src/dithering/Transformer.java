@@ -220,7 +220,7 @@ public class Transformer {
         return array;
     }
 
-    public int[][] getContextCurveDither() {
+    public int[][] getContextCurveDither(boolean showPath) {
         int[][] array = new int[height][width];
 
         //only works for even dimension pictures
@@ -293,47 +293,59 @@ public class Transformer {
 
         // 4. Linear dither!!!!
 
+        if(showPath) {
+            double change = 255.0/path.length;
+            System.out.println("change is "+change);
+
+            for(int i=0;i<path.length;i++) {
+                Point p = path[i];
+                //System.out.println("visiting ("+p.x+","+p.y+")");
+                array[p.x][p.y] = ((int)(255-(change*i)) & 0xFF);
+            }
+            return array;
+        }
+
         int rError = 0;
         int gError = 0;
         int bError = 0;
         for(int i=0;i<path.length;i++) {
             Point p = path[i];
 
-            int rgb = image.getRGB(p.x, p.y);
-                int red = (rgb >> 16) & 0xFF;
-                int green = (rgb >> 8) & 0xFF;
-                int blue = rgb & 0xFF;
-                //rgb values are between 0-255.
+            int rgb = image.getRGB(p.y, p.x);
+            int red = (rgb >> 16) & 0xFF;
+            int green = (rgb >> 8) & 0xFF;
+            int blue = rgb & 0xFF;
+            //rgb values are between 0-255.
 
-                red+=rError;
-                green+=gError;
-                blue+=bError;
+            red+=rError;
+            green+=gError;
+            blue+=bError;
 
-                if(red<113) {
-                    rError = red;
-                    red=0;
-                } else {
-                    rError = red - 255;
-                    red=225;
-                }
+            if(red<113) {
+                rError = red;
+                red=0;
+            } else {
+                rError = red - 255;
+                red=225;
+            }
 
-                if(green<113) {
-                    gError = green;
-                    green=0;
-                } else {
-                    gError = green - 255;
-                    green=225;
-                }
+            if(green<113) {
+                gError = green;
+                green=0;
+            } else {
+                gError = green - 255;
+                green=225;
+            }
 
-                if(blue<113) {
-                    bError = blue;
-                    blue = 0;
-                } else {
-                    bError = blue - 255;
-                    blue = 255;
-                }
+            if(blue<113) {
+                bError = blue;
+                blue = 0;
+            } else {
+                bError = blue - 255;
+                blue = 255;
+            }
 
-                array[p.y][p.x] = (red << 16) | (green << 8) | blue;
+            array[p.x][p.y] = (red << 16) | (green << 8) | blue;
         }
 
         return array;
