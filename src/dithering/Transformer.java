@@ -294,15 +294,26 @@ public class Transformer {
         // 4. Linear dither!!!!
 
         if(showPath) {
-            double change = 255.0/path.length;
-            System.out.println("change is "+change);
-
-            for(int i=0;i<path.length;i++) {
-                Point p = path[i];
-                //System.out.println("visiting ("+p.x+","+p.y+")");
-                array[p.x][p.y] = ((int)(255-(change*i)) & 0xFF);
+            //double change = 255.0/path.length;
+            //System.out.println("change is "+change);
+            int[][] big = new int[array.length*2][array[0].length*2];
+            for(int i = 0; i < big.length; i++){
+                for(int j = 0; j < big[0].length; j++){
+                    big[i][j] = (0xFFFFFF);
+                }
             }
-            return array;
+            for(int i=0;i<path.length - 1;i++) {
+                Point p = path[i];
+                Point n = path[i+1];
+                //System.out.println("From point: " + p + " to point: " + n);
+                //System.out.println("visiting ("+p.x+","+p.y+")");
+                big[p.x * 2][p.y * 2] = (0x000000);
+                if(n.x > p.x){big[p.x * 2 + 1][p.y * 2] = (0x000000);}
+                if(n.y > p.y){big[p.x * 2][p.y * 2 + 1] = (0x000000);}
+                if(n.x < p.x){big[p.x * 2 - 1][p.y * 2] = (0x000000);}
+                if(n.y < p.y){big[p.x * 2][p.y * 2 - 1] = (0x000000);}
+            }
+            return big;
         }
 
         int rError = 0;
